@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Network {
+  id       Int         @id @default(autoincrement())
+  parentId Int?
+  parent   Network?    @relation("NetworkToNetwork", fields: [parentId], references: [id])
+  children Network[]   @relation("NetworkToNetwork")
+  name     String
+  netmask  String?     @default("")
+  gateway  String?     @default("")
+  startIp  String?     @default("")
+  endIp    String?     @default("")
+  vlan     String?     @default("")
+  ips      IpAddress[]
+  remark   String?     @default("")
+  createAt DateTime    @default(now())
+  updateAt DateTime    @default(now())
+}
+
+model IpAddress {
+  id          Int     @id @default(autoincrement())
+  ip          String
+  panelNumber String?
+  user        String?
+  location    String?
+
+  network   Network? @relation(fields: [networkId], references: [id])
+  networkId Int?
+  remark    String?
+
+  createAt DateTime @default(now())
+  updateAt DateTime @default(now())
+}
+
+model Device {
+  id            Int          @id @default(autoincrement())
+  deviceModel   DeviceModel? @relation(fields: [deviceModelid], references: [id])
+  deviceModelid Int?
+  user          String?
+  location      String?
+
+  remark   String?
+  createAt DateTime @default(now())
+  updateAt DateTime @default(now())
+}
+
+model DeviceModel {
+  id    Int    @id @default(autoincrement())
+  model String @unique
+
+  Device Device[]
+
+  remark   String?
+  createAt DateTime @default(now())
+  updateAt DateTime @default(now())
+}
