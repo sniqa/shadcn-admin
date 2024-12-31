@@ -13,39 +13,9 @@ import {
   RowData,
   useReactTable,
 } from "@tanstack/react-table";
+import { ShadcnReactTable, useShadcnReactTable } from "@/components/table2";
 
 const columns: ColumnDef<IpTypeWithId>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-        className="translate-y-[2px]"
-      />
-    ),
-    size: 30,
-    meta: {
-      className: cn(
-        "sticky md:table-cell left-0 z-10 rounded-tl",
-        "bg-background transition-colors duration-200 group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted"
-      ),
-    },
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-        className="translate-y-[2px]"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
   {
     accessorKey: "ip",
     header: "IP地址",
@@ -67,6 +37,8 @@ const columns: ColumnDef<IpTypeWithId>[] = [
   {
     accessorKey: "location",
     header: "位置",
+    enableResizing: true,
+    enableSorting: true,
   },
   {
     accessorKey: "panelNumber",
@@ -77,29 +49,32 @@ const columns: ColumnDef<IpTypeWithId>[] = [
     accessorKey: "updateAt",
     header: "修改时间",
   },
-
-  {
-    id: "actions",
-    cell: () => <></>,
-    size: 50,
-  },
 ];
 
 const IpTable = <TData extends RowData>({ data }: { data: TData[] }) => {
   console.log(data);
 
-  const table = useReactTable({
+  // const table = useReactTable({
+  //   columns,
+  //   data,
+  //   getCoreRowModel: getCoreRowModel(),
+  //   getFilteredRowModel: getFilteredRowModel(),
+  //   getPaginationRowModel: getPaginationRowModel(),
+  //   getSortedRowModel: getSortedRowModel(),
+  //   getFacetedRowModel: getFacetedRowModel(),
+  //   getFacetedUniqueValues: getFacetedUniqueValues(),
+  // });
+
+  const table = useShadcnReactTable({
     columns,
     data,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
+    enableSelect: true,
+    customActions: () => <>hello</>,
   });
 
-  return <DataTable table={table} />;
+  // return <DataTable table={table} />;
+
+  return <ShadcnReactTable table={table} />;
 };
 
 export default IpTable;
