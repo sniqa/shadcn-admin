@@ -1,14 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { prisma } from "@/server/db";
 import { successResult, faildResult } from "@/server/result";
-import {
-  networkSchema,
-  NetworkTypeWithId,
-  type NetworkType,
-} from "@/types/network";
+import { networkSchema, type NetworkType } from "@/types/network";
 import ip from "ip";
+import { SearchCondition } from "@/types/common";
 
 //create
-export const create_network = async (data: NetworkType) => {
+export const create_network = async (data: NetworkType["Schema"]) => {
   const { success } = networkSchema.safeParse(data);
 
   if (!success) {
@@ -35,8 +33,6 @@ export const create_network = async (data: NetworkType) => {
     }
   }
 
-  console.log(ips);
-
   const netowrk = await prisma.network.create({
     data: { ...data, ips: { create: ips || null } },
   });
@@ -44,9 +40,23 @@ export const create_network = async (data: NetworkType) => {
   return successResult(netowrk);
 };
 
-export const find_network = async () => {
+// find
+export const find_network = async (data: SearchCondition | null) => {
   console.log("find_network");
 
+  const result = await prisma.network.findMany({
+    where: data?.where,
+    include: data?.include,
+    // select: data.select,
+    // skip:
+    // select: {}
+  });
+
+  return successResult(result);
+};
+
+// network tree node
+export const find_network_tree = async () => {
   const result = await prisma.network.findMany({
     where: { parentId: null },
     include: {
@@ -70,8 +80,8 @@ export const delete_network = async ({ id }: { id: string }) => {
 };
 
 // update
-export const update_network = async (data: NetworkTypeWithId) => {
-  const { id, ...rest } = data;
+export const update_network = async (data: NetworkType["Model"]) => {
+  const { id, children, ips, ...rest } = data;
 
   const result = await prisma.network.update({
     where: { id: Number(id) },

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NetworkType, NetworkTypeWithId } from "@/types/network";
+import type { NetworkType } from "@/types/network";
 import { FaildResult, SuccessResult } from "./result";
+import { SearchCondition } from "./common";
 
 export type SocketDataType = Record<string, any>;
 
@@ -12,21 +13,22 @@ export type ServerToClientEvents = {
 
 export type ClientToServerEvents = {
   create_network: (
-    data: NetworkType,
+    data: NetworkType["Schema"],
     callback: <TData>(result: SuccessResult<TData> | FaildResult) => void
   ) => void;
   find_network: (
-    data: Record<string, any> | null,
+    data: SearchCondition | null,
     callback: <TData>(result: SuccessResult<TData> | FaildResult) => void
   ) => void;
+
   delete_network: (
-    id: { id: string },
+    id: { id: number },
     callback: <TData>(result: SuccessResult<TData> | FaildResult) => void
   ) => void;
   update_network: (
-    data: NetworkTypeWithId,
+    data: NetworkType["Model"],
     callback: <TData>(result: SuccessResult<TData> | FaildResult) => void
-  )
+  ) => void;
 };
 
 export type InterServerEvents = {

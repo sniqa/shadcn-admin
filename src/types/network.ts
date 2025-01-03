@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { z } from "zod";
+import { Prisma } from "@prisma/client";
+
+const IpModel: Prisma.IpAddressSelect = {
+  network: true,
+};
 
 // NETWORK
-export type WithId = {
-  id?: number | null;
-};
 
 export const networkSchema = z.object({
   parentId: z.number().or(z.null()),
@@ -14,11 +17,9 @@ export const networkSchema = z.object({
   gateway: z.string(),
   vlan: z.string(),
   remark: z.string(),
+  createAt: z.date(),
+  updateAt: z.date(),
 });
-
-export type NetworkType = z.infer<typeof networkSchema>;
-
-export type NetworkTypeWithId = NetworkType & WithId;
 
 // IP
 export const ipSchema = z.object({
@@ -27,9 +28,16 @@ export const ipSchema = z.object({
   user: z.string(),
   location: z.string(),
   remark: z.string(),
+  createAt: z.date(),
   updateAt: z.date(),
 });
 
-export type IpType = z.infer<typeof ipSchema>;
-
-export type IpTypeWithId = IpType & WithId;
+export type NetworkTypeSchema = z.infer<typeof networkSchema>;
+export type NetworkTypeModel = Prisma.NetworkGetPayload<{
+  include: {
+    children: true;
+    ips: true;
+  };
+}>;
+export type NetworkTypeIpSchema = z.infer<typeof ipSchema>;
+export type NetworkTypeIpModel = Prisma.IpAddressGetPayload<object>;

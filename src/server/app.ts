@@ -33,7 +33,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("find_network", async (data, callback) => {
-    const result = await find_network();
+    const result = await find_network(data);
     callback(result);
   });
 

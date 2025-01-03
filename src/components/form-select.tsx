@@ -14,8 +14,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { CONSTANT } from "@/lib/constant";
 
-export type SelectItemData = { label: React.ReactNode; value: string | number };
+export type SelectItemData = {
+  label: React.ReactNode;
+  value: string | number | null;
+};
 
 export type FormInputProps<
   TFieldValues extends FieldValues = FieldValues,
@@ -45,7 +49,7 @@ const FormInput = <
       render={({ field }) => (
         <FormItem>
           {label && <FormLabel>{label}</FormLabel>}
-          <Select onValueChange={field.onChange} value={field.value}>
+          <Select onValueChange={field.onChange} value={String(field.value)}>
             <FormControl className={className}>
               <SelectTrigger>
                 <SelectValue placeholder={placeholder} />
@@ -55,8 +59,12 @@ const FormInput = <
               {data.map(
                 (d) =>
                   d && (
-                    <SelectItem key={d.value} value={String(d.value)}>
-                      {d.label}
+                    <SelectItem
+                      key={d.value}
+                      value={String(d.value)}
+                      className="h-8"
+                    >
+                      {d.label ? d.label : CONSTANT.EMPTY}
                     </SelectItem>
                   )
               )}

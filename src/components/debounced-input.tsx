@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, forwardRef } from "react";
 import { Input } from "./ui/input";
 // import {} from '@r
 
@@ -8,33 +8,39 @@ export type DebouncedInputProps = {
   debounce?: number;
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange">;
 
-const DebouncedInput = ({
-  value: initialValue,
-  onChange,
-  debounce = 500,
-  ...props
-}: DebouncedInputProps) => {
-  const [value, setValue] = useState(initialValue);
+const DebouncedInput = forwardRef(
+  (
+    {
+      value: initialValue,
+      onChange,
+      debounce = 500,
+      ...props
+    }: DebouncedInputProps,
+    ref
+  ) => {
+    const [value, setValue] = useState(initialValue);
 
-  useEffect(() => {
-    setValue(initialValue);
-  }, [initialValue]);
+    useEffect(() => {
+      setValue(initialValue);
+    }, [initialValue]);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      onChange(value);
-    }, debounce);
+    useEffect(() => {
+      const timeout = setTimeout(() => {
+        onChange(value);
+      }, debounce);
 
-    return () => clearTimeout(timeout);
-  }, [value]);
+      return () => clearTimeout(timeout);
+    }, [value]);
 
-  return (
-    <Input
-      {...props}
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-    />
-  );
-};
+    return (
+      <Input
+        {...props}
+        ref={ref}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+    );
+  }
+);
 
 export default DebouncedInput;

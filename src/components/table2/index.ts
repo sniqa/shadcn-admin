@@ -1,5 +1,6 @@
 import ShadcnReactTable from "./ShadcnReactTable";
+import ShadcnReactTableToolbar from "./toolbar/ShadcnReactTableToolbar";
 
 export { useShadcnReactTable } from "./hooks/useShadcnReactTable";
 
-export { ShadcnReactTable };
+export { ShadcnReactTable, ShadcnReactTableToolbar };

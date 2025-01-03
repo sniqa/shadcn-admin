@@ -1,21 +1,14 @@
-import DataTable from "@/components/table/table";
-import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { IpTypeWithId } from "@/types/network";
+import { type NetworkTypeIpModel } from "@/types/network";
+import { ColumnDef } from "@tanstack/react-table";
 import {
-  ColumnDef,
-  getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  RowData,
-  useReactTable,
-} from "@tanstack/react-table";
-import { ShadcnReactTable, useShadcnReactTable } from "@/components/table2";
+  ShadcnReactTable,
+  useShadcnReactTable,
+  ShadcnReactTableToolbar,
+} from "@/components/table2";
+import CustomBreadcrumb from "@/components/custom-breadcrumb";
 
-const columns: ColumnDef<IpTypeWithId>[] = [
+const columns: ColumnDef<NetworkTypeIpModel>[] = [
   {
     accessorKey: "ip",
     header: "IP地址",
@@ -51,28 +44,27 @@ const columns: ColumnDef<IpTypeWithId>[] = [
   },
 ];
 
-const IpTable = <TData extends RowData>({ data }: { data: TData[] }) => {
-  console.log(data);
-
-  // const table = useReactTable({
-  //   columns,
-  //   data,
-  //   getCoreRowModel: getCoreRowModel(),
-  //   getFilteredRowModel: getFilteredRowModel(),
-  //   getPaginationRowModel: getPaginationRowModel(),
-  //   getSortedRowModel: getSortedRowModel(),
-  //   getFacetedRowModel: getFacetedRowModel(),
-  //   getFacetedUniqueValues: getFacetedUniqueValues(),
-  // });
+const IpTable = ({
+  data,
+  title = "",
+}: {
+  data: NetworkTypeIpModel[];
+  title?: string;
+}) => {
+  // console.log(data);
 
   const table = useShadcnReactTable({
-    columns,
     data,
+    columns,
     enableSelect: true,
     customActions: () => <>hello</>,
+    toolbar: (table) => (
+      <ShadcnReactTableToolbar
+        customFeture={<CustomBreadcrumb data={[{ title }]} />}
+        table={table}
+      />
+    ),
   });
-
-  // return <DataTable table={table} />;
 
   return <ShadcnReactTable table={table} />;
 };

@@ -5,14 +5,17 @@ import DebouncedInput from "@/components/debounced-input";
 import ShadcnReactTableViewOptions from "./ShadcnReactTableViewOptions";
 import ShadcnReactTableDensity from "./ShadcnReactTableDensity";
 import ShadcnReactTableFullScreen from "./ShadcnReactTableFullScreen";
+import { ReactNode } from "react";
 
 export type ShadcnReactTableToolbarProps<TData extends RowData> = {
   table: ShadcnReactTableInstance<TData>;
+  customFeture?: ReactNode;
   className?: string;
 };
 
 const ShadcnReactTableToolbar = <TData extends RowData>({
   table,
+  customFeture,
   className,
 }: ShadcnReactTableToolbarProps<TData>) => {
   const { globalFilter } = table.getState();
@@ -21,11 +24,12 @@ const ShadcnReactTableToolbar = <TData extends RowData>({
   return (
     <div
       className={cn(
-        "border-b h-14 min-h-14 flex items-center justify-between px-2",
+        "border-b h-14 min-h-14 flex items-center justify-end px-2",
+        customFeture && "justify-between",
         className
       )}
     >
-      <div className=""></div>
+      {customFeture && <div className="flex items-center">{customFeture}</div>}
 
       <div className="flex items-center gap-2">
         <DebouncedInput

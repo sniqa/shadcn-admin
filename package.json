@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "server": "bun run --watch src/server/app.ts",
+    "test": "bun run --watch src/server/test.ts",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"

@@ -15,7 +15,7 @@ export const useSocketLoaderData = <TData extends Record<string, any>>(
   useEffect(() => {
     setLoading(true);
 
-    socket.emit(event, args, (result) => {
+    socket.emit(event, args as any, (result) => {
       setLoading(false);
 
       if (result.success) {
@@ -24,7 +24,7 @@ export const useSocketLoaderData = <TData extends Record<string, any>>(
         setError(result.message);
       }
     });
-  }, [event, isReflush, args]);
+  }, [event, isReflush]);
 
   const refulsh = () => setIsRefulsh((o) => !o);
 

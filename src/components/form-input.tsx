@@ -7,7 +7,7 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
-import { Input } from "./ui/input";
+import DebouncedInput from "./debounced-input";
 
 export type FormInputProps<
   TFieldValues extends FieldValues = FieldValues,
@@ -36,7 +36,11 @@ const FormInput = <
         <FormItem>
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
-            <Input placeholder={placeholder} {...field} className={className} />
+            <DebouncedInput
+              placeholder={placeholder}
+              {...field}
+              className={className}
+            />
           </FormControl>
           {description && <FormDescription>{description}</FormDescription>}
           <FormMessage />

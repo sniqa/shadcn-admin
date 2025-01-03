@@ -17,4 +17,5 @@ export const CONSTANT = {
   UPDATE: "修改",
   SEARCH: "搜索",
   FIND: "查找",
+  EMPTY: "",
 };

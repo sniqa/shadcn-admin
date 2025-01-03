@@ -5,22 +5,21 @@ import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import FormSelect, { type SelectItemData } from "@/components/form-select";
 import FormInput from "@/components/form-input";
-import { networkSchema, NetworkTypeWithId } from "@/types/network";
-import { z } from "zod";
 import { CONSTANT } from "@/lib/constant";
 import { Button } from "@/components/ui/button";
 import RequiredLabel from "@/components/required-label";
 import FormInputarea from "@/components/form-inputarea";
 import LoadingButton from "@/components/loading-button";
-
-type NetworkType = z.infer<typeof networkSchema>;
+import type { NetworkTypeSchema, NetworkTypeModel } from "@/types/network";
 
 export interface NetworkDialogProps extends CustomDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   data: SelectItemData[];
-  onSubmit?: (values: NetworkType | NetworkTypeWithId) => Promise<void>;
-  defaultValues?: NetworkTypeWithId;
+  onSubmit?: (
+    values: NetworkTypeSchema | NetworkTypeModel
+  ) => Promise<void>;
+  defaultValues?: NetworkTypeModel;
   loading?: boolean;
 }
 
@@ -33,7 +32,7 @@ const NetworkDialog = ({
   loading,
   ...props
 }: NetworkDialogProps) => {
-  const form = useForm<NetworkType>({
+  const form = useForm<NetworkTypeSchema | NetworkTypeModel>({
     values: defaultValues,
     defaultValues: {
       parentId: null,
@@ -47,7 +46,7 @@ const NetworkDialog = ({
     },
   });
 
-  const handleSubmit = (data: NetworkType | NetworkTypeWithId) =>
+  const handleSubmit = (data: NetworkTypeSchema | NetworkTypeModel) =>
     onSubmit && onSubmit(data);
 
   return (
