@@ -17,6 +17,7 @@ export type FormInputProps<
   placeholder?: string;
   description?: React.ReactNode;
   className?: string;
+  type?: React.HTMLInputTypeAttribute;
 } & Omit<ControllerProps<TFieldValues, TName>, "render">;
 
 const FormInput = <
@@ -27,6 +28,7 @@ const FormInput = <
   placeholder,
   description = "",
   className,
+  type,
   ...props
 }: FormInputProps<TFieldValues, TName>) => {
   return (
@@ -40,6 +42,7 @@ const FormInput = <
               placeholder={placeholder}
               {...field}
               className={className}
+              type={type}
             />
           </FormControl>
           {description && <FormDescription>{description}</FormDescription>}

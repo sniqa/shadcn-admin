@@ -10,15 +10,18 @@ import { Button } from "@/components/ui/button";
 import RequiredLabel from "@/components/required-label";
 import FormInputarea from "@/components/form-inputarea";
 import LoadingButton from "@/components/loading-button";
-import type { NetworkTypeSchema, NetworkTypeModel } from "@/types/network";
+import {
+  type NetworkTypeSchema,
+  type NetworkTypeModel,
+  networkSchema,
+} from "@/types/network";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export interface NetworkDialogProps extends CustomDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   data: SelectItemData[];
-  onSubmit?: (
-    values: NetworkTypeSchema | NetworkTypeModel
-  ) => Promise<void>;
+  onSubmit?: (values: NetworkTypeSchema | NetworkTypeModel) => Promise<void>;
   defaultValues?: NetworkTypeModel;
   loading?: boolean;
 }
@@ -34,6 +37,7 @@ const NetworkDialog = ({
 }: NetworkDialogProps) => {
   const form = useForm<NetworkTypeSchema | NetworkTypeModel>({
     values: defaultValues,
+    resolver: zodResolver(networkSchema),
     defaultValues: {
       parentId: null,
       name: "",
@@ -104,7 +108,11 @@ const NetworkDialog = ({
             />
           </div>
 
-          <FormInputarea label={CONSTANT.REMARK} name="remark" />
+          <FormInputarea
+            label={CONSTANT.REMARK}
+            name="remark"
+            control={form.control}
+          />
 
           {loading ? (
             <LoadingButton loading={loading} />

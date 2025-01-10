@@ -1,37 +1,62 @@
 import { useMemo, useState } from "react";
 import NetworkDialog from "./network-dialog";
-import { useSocketLoaderData } from "@/hooks/use-socket-loader-data";
-import { useSocketAction } from "@/hooks/use-socket-action";
+import { useSocketLoaderData, useSocketAction } from "@/hooks/useFetchData";
+// import { useSocketAction } from "@/hooks/use-socket-action";
 import { type NetworkTypeSchema, NetworkTypeModel } from "@/types/network";
 import { Button } from "@/components/ui/button";
 import { Tree, TreeDataItem } from "@/components/ui/tree-view2";
 import { CONSTANT } from "@/lib/constant";
 import IpTable from "./ip-table";
 import { SelectItemData } from "@/components/form-select";
+import ComfirmDialog from "@/components/comfirm-dialog";
+import { useToast } from "@/hooks/use-toast";
+import { useToggleState } from "@/lib/hooks";
+import { FilePenLine, FilePlus, FileX } from "lucide-react";
+import { CustomTooltip } from "@/components/custom-tooltip";
 
 const Network = () => {
-  const [updateOpen, setUpdateOpen] = useState(false);
-  const [createOpen, setCreateOpen] = useState(false);
+  const { toast } = useToast();
+
+  console.log("network-index");
+
+  const [updateOpen, toggleUpdateOpen] = useToggleState(false);
+  const [createOpen, toggleCreateOpen] = useToggleState(false);
+  const [deleteOpen, toggleDeleteOpen] = useToggleState(false);
 
   const [currentRow, setCurrentRow] = useState<NetworkTypeModel | null>(null);
 
-  const { data: networkData, refulsh } = useSocketLoaderData("find_network", {
-    where: { parentId: null },
-    include: {
-      children: {
-        include: { children: true },
+  const { data: networkData } = useSocketLoaderData<NetworkTypeModel[]>(
+    "find_network",
+    {
+      where: { parentId: null },
+      include: {
+        children: {
+          include: { children: true },
+        },
+        ips: true,
       },
-      ips: true,
-    },
-  });
+    }
+  );
+
+  const ipData = useMemo(() => {
+    const id = currentRow?.id;
+
+    const n = networkData || [];
+
+    if (id && n.length > 0) {
+      return n.find((d) => d.id === id)?.ips || [];
+    }
+
+    return [];
+  }, [networkData, currentRow]);
 
   const { data: networkSelectData } = useSocketLoaderData("find_network", null);
 
-  const [create, createLoading] = useSocketAction(refulsh);
+  const [create, createLoading] = useSocketAction(["find_network"]);
 
-  const [remove] = useSocketAction(refulsh);
+  const [remove] = useSocketAction(["find_network"]);
 
-  const [update, updateLoading] = useSocketAction(refulsh);
+  const [update, updateLoading] = useSocketAction(["find_network"]);
 
   const selectData: SelectItemData[] = useMemo(() => {
     return networkSelectData
@@ -56,10 +81,10 @@ const Network = () => {
     }
     const result = await create("create_network", values);
     if (result.success) {
-      console.log(result.data);
-      setCreateOpen((o) => !o);
+      toast({ title: `${CONSTANT.CREATE_SUCCESS}` });
+      toggleCreateOpen();
     } else {
-      console.log(result.message);
+      toast({ title: `${CONSTANT.CREATE_FAILD}: ${result.message}` });
     }
   };
 
@@ -72,10 +97,10 @@ const Network = () => {
     } else {
       const result = await remove("delete_network", { id });
       if (result.success) {
-        console.log(result.data);
-        // setCreateOpen((o) => !o);
+        toggleDeleteOpen();
+        toast({ title: `${CONSTANT.DELETE_SUCCESS}` });
       } else {
-        console.log(result.message);
+        toast({ title: `${CONSTANT.DELETE_FAILD}: ${result.message}` });
       }
     }
   };
@@ -90,27 +115,56 @@ const Network = () => {
 
     const result = await update("update_network", data);
     if (result.success) {
-      setUpdateOpen((o) => !o);
-      console.log(result.data);
-      // setCreateOpen((o) => !o);
+      toggleUpdateOpen();
+      toast({ title: `${CONSTANT.UPDATE_SUCCESS}` });
     } else {
-      console.log(result.message);
+      toast({ title: `${CONSTANT.UPDATE_FAILD}: ${result.message}` });
     }
   };
 
   return (
     <div className="w-full h-full flex">
       <div className="bg-white dark:bg-slate-700 w-72 h-full flex flex-col">
-        <div className="">
-          <Button variant={"ghost"} onClick={() => setCreateOpen((o) => !o)}>
-            create
-          </Button>
-          <Button variant={"ghost"} onClick={() => setUpdateOpen((o) => !o)}>
-            update
-          </Button>
-          <Button variant={"ghost"} onClick={handleOnDelete}>
-            delete
-          </Button>
+        <div className="flex justify-end h-12 p-2 items-center gap-1">
+          {/* create button */}
+          <CustomTooltip label={CONSTANT.CREATE_NETWORK}>
+            <Button
+              variant={"outline"}
+              size={"icon"}
+              className="size-8"
+              onClick={toggleCreateOpen}
+            >
+              <FilePlus />
+            </Button>
+          </CustomTooltip>
+
+          {/* update button */}
+          {currentRow && (
+            <>
+              <CustomTooltip label={CONSTANT.UPDATE_NETWORK}>
+                <Button
+                  variant={"outline"}
+                  size={"icon"}
+                  className="size-8"
+                  onClick={toggleUpdateOpen}
+                >
+                  <FilePenLine />
+                </Button>
+              </CustomTooltip>
+
+              {/* delete button */}
+              <CustomTooltip label={CONSTANT.DELETE_NETWORK}>
+                <Button
+                  variant={"outline"}
+                  className="text-red-500 size-8"
+                  size={"icon"}
+                  onClick={toggleDeleteOpen}
+                >
+                  <FileX />
+                </Button>
+              </CustomTooltip>
+            </>
+          )}
         </div>
 
         <Tree
@@ -126,29 +180,39 @@ const Network = () => {
           title={CONSTANT.CREATE_NETWORK}
           description={"o"}
           open={createOpen}
-          onOpenChange={() => setCreateOpen((o) => !o)}
+          onOpenChange={toggleCreateOpen}
           data={selectData}
           loading={createLoading}
           onSubmit={(values) => handleOnCreate(values as NetworkTypeSchema)}
         />
 
-        {/* update */}
         {currentRow && (
-          <NetworkDialog
-            title={CONSTANT.UPDATE_NETWORK}
-            description={"l"}
-            open={updateOpen}
-            onOpenChange={() => setUpdateOpen((o) => !o)}
-            data={selectDataWithoutCurrentRow}
-            defaultValues={currentRow}
-            loading={updateLoading}
-            onSubmit={(values) => handleOnUpdate(values as NetworkTypeModel)}
-          />
+          <>
+            {/* update */}
+            <NetworkDialog
+              title={CONSTANT.UPDATE_NETWORK}
+              description={"l"}
+              open={updateOpen}
+              onOpenChange={toggleUpdateOpen}
+              data={selectDataWithoutCurrentRow}
+              defaultValues={currentRow}
+              loading={updateLoading}
+              onSubmit={(values) => handleOnUpdate(values as NetworkTypeModel)}
+            />
+
+            <ComfirmDialog
+              open={deleteOpen}
+              onOpenChange={toggleDeleteOpen}
+              title={CONSTANT.DELETE}
+              desc={`${CONSTANT.DELETE}: ${currentRow.name}?`}
+              handleConfirm={handleOnDelete}
+            />
+          </>
         )}
       </div>
 
       <div className="w-full h-full p-2">
-        <IpTable data={currentRow?.ips || []} title={currentRow?.name} />
+        <IpTable data={ipData} title={currentRow?.name} />
       </div>
     </div>
   );

@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { NetworkType } from "@/types/network";
+import type {
+  NetworkTypeIpModel,
+  NetworkTypeModel,
+  NetworkTypeSchema,
+} from "@/types/network";
 import { FaildResult, SuccessResult } from "./result";
 import { SearchCondition } from "./common";
 
@@ -13,7 +17,7 @@ export type ServerToClientEvents = {
 
 export type ClientToServerEvents = {
   create_network: (
-    data: NetworkType["Schema"],
+    data: NetworkTypeSchema,
     callback: <TData>(result: SuccessResult<TData> | FaildResult) => void
   ) => void;
   find_network: (
@@ -26,7 +30,19 @@ export type ClientToServerEvents = {
     callback: <TData>(result: SuccessResult<TData> | FaildResult) => void
   ) => void;
   update_network: (
-    data: NetworkType["Model"],
+    data: NetworkTypeModel,
+    callback: <TData>(result: SuccessResult<TData> | FaildResult) => void
+  ) => void;
+  update_ip: (
+    data: NetworkTypeIpModel,
+    callback: <TData>(result: SuccessResult<TData> | FaildResult) => void
+  ) => void;
+  delete_ip: (
+    data: NetworkTypeIpModel,
+    callback: <TData>(result: SuccessResult<TData> | FaildResult) => void
+  ) => void;
+  login: (
+    data: { username: string; password: string },
     callback: <TData>(result: SuccessResult<TData> | FaildResult) => void
   ) => void;
 };

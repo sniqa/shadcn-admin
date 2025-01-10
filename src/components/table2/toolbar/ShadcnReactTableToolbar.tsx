@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { RowData, ShadcnReactTableInstance } from "../types";
-import { CONSTANT } from "@/lib/constant";
+import { CONSTANT } from "../lib/constant";
 import DebouncedInput from "@/components/debounced-input";
 import ShadcnReactTableViewOptions from "./ShadcnReactTableViewOptions";
 import ShadcnReactTableDensity from "./ShadcnReactTableDensity";

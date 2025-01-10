@@ -12,6 +12,8 @@ import {
   find_network,
   update_network,
 } from "@/server/controllers/network";
+import { delete_ip, update_ip } from "./controllers/ip";
+import { login } from "./controllers/user";
 
 const httpServer = createServer();
 
@@ -24,12 +26,24 @@ const io = new Server<
   cors: { origin: "*" },
 });
 
+const loginSet = new Set();
+
 io.on("connection", (socket) => {
+  if (!loginSet.has(socket.id)) {
+    socket.on("login", async (data, callback) => {
+      const result = await login(data);
+      if (result.success) {
+        loginSet.add(socket.id);
+      }
+      callback(result);
+    });
+  } else {
+    return;
+  }
+
   socket.on("create_network", async (data, callback) => {
     const result = await create_network(data);
-
-    setTimeout(() => callback(result), 1000);
-    // callback(result);
+    callback(result);
   });
 
   socket.on("find_network", async (data, callback) => {
@@ -44,6 +58,14 @@ io.on("connection", (socket) => {
 
   socket.on("update_network", async (data, callback) => {
     const result = await update_network(data);
+    callback(result);
+  });
+  socket.on("delete_ip", async (data, callback) => {
+    const result = await delete_ip(data);
+    callback(result);
+  });
+  socket.on("update_ip", async (data, callback) => {
+    const result = await update_ip(data);
     callback(result);
   });
 });

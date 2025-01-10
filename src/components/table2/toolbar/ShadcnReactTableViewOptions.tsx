@@ -17,6 +17,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ShadcnReactTableInstance } from "../types";
+import { CustomTooltip } from "@/components/custom-tooltip";
+import { CONSTANT } from "../lib/constant";
 
 interface ShadcnReactTableViewOptionsProps<TData> {
   table: ShadcnReactTableInstance<TData>;
@@ -30,17 +32,19 @@ const ShadcnReactTableViewOptions = <TData,>({
   return (
     <Popover modal>
       <PopoverTrigger asChild>
-        <div className="">
-          <Button
-            ref={triggerRef}
-            aria-label="Toggle columns"
-            variant="outline"
-            role="combobox"
-            size="icon"
-            className="size-8"
-          >
-            <Settings2 />
-          </Button>
+        <div>
+          <CustomTooltip label={CONSTANT.SHOW_HIDE_COLUMN}>
+            <Button
+              ref={triggerRef}
+              aria-label="Toggle columns"
+              variant="outline"
+              role="combobox"
+              size="icon"
+              className="size-8"
+            >
+              <Settings2 />
+            </Button>
+          </CustomTooltip>
         </div>
       </PopoverTrigger>
       <PopoverContent

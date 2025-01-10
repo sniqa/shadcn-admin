@@ -10,26 +10,25 @@ const IpModel: Prisma.IpAddressSelect = {
 
 export const networkSchema = z.object({
   parentId: z.number().or(z.null()),
-  name: z.string(),
-  startIp: z.string(),
-  endIp: z.string(),
+  name: z.string().nonempty({ message: "Required" }),
+  startIp: z.literal("").or(z.string().ip({ message: "Invalid IP address" })),
+  endIp: z.literal("").or(z.string().ip({ message: "Invalid IP address" })),
   netmask: z.string(),
   gateway: z.string(),
   vlan: z.string(),
   remark: z.string(),
-  createAt: z.date(),
-  updateAt: z.date(),
 });
 
 // IP
 export const ipSchema = z.object({
-  ip: z.string(),
+  ip: z
+    .string()
+    .nonempty({ message: "Required" })
+    .ip({ message: "Invalid IP address" }),
   panelNumber: z.string(),
   user: z.string(),
   location: z.string(),
   remark: z.string(),
-  createAt: z.date(),
-  updateAt: z.date(),
 });
 
 export type NetworkTypeSchema = z.infer<typeof networkSchema>;

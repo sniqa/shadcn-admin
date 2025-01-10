@@ -25,17 +25,17 @@ const CustomBreadcrumb = ({ data, className }: CustomBreadcrumbProps) => {
     <Breadcrumb className={cn("text-sm", className)}>
       <BreadcrumbList>
         {data.map((d, index) => (
-          <>
-            <BreadcrumbItem>
-              {d.to ? (
-                <BreadcrumbLink href={d.to}>{d.title}</BreadcrumbLink>
-              ) : (
-                <BreadcrumbPage>{d.title}</BreadcrumbPage>
-              )}
-            </BreadcrumbItem>
+          // <>
+          <BreadcrumbItem key={d.title}>
+            {d.to ? (
+              <BreadcrumbLink href={d.to}>{d.title}</BreadcrumbLink>
+            ) : (
+              <BreadcrumbPage>{d.title}</BreadcrumbPage>
+            )}
+            {index != last && <BreadcrumbSeparator key={index} />}
+          </BreadcrumbItem>
 
-            {index != last && <BreadcrumbSeparator />}
-          </>
+          // {/* </> */}
         ))}
       </BreadcrumbList>
     </Breadcrumb>

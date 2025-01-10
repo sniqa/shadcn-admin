@@ -1,27 +1,95 @@
-import CustomDialog from "@/components/custom-dialog";
+import CustomDialog, { CustomDialogProps } from "@/components/custom-dialog";
 import FormInput from "@/components/form-input";
+import FormInputarea from "@/components/form-inputarea";
+import LoadingButton from "@/components/loading-button";
+import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { CONSTANT } from "@/lib/constant";
+import { NetworkTypeIpModel } from "@/types/network";
 import { useForm } from "react-hook-form";
 
-const IpDialog = () => {
+export type IpDialogProps = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  defaultValues?: NetworkTypeIpModel;
+  onSubmit?: (values: NetworkTypeIpModel) => Promise<void>;
+  loading?: boolean;
+} & CustomDialogProps;
+
+const IpDialog = ({
+  open,
+  onOpenChange,
+  defaultValues,
+  onSubmit,
+  loading,
+  ...props
+}: IpDialogProps) => {
   const form = useForm({
+    values: defaultValues,
     defaultValues: {
       ip: "",
       user: "",
       location: "",
+      panelNumber: "",
       networkId: null,
       remark: "",
     },
   });
 
-  const handleSubmit = () => {};
+  const handleSubmit = (value: NetworkTypeIpModel) =>
+    onSubmit && onSubmit(value);
 
   return (
-    <CustomDialog>
+    <CustomDialog
+      {...props}
+      open={open}
+      onOpenChange={(open) => {
+        form.reset();
+        onOpenChange(open);
+      }}
+    >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)}>
-          <FormInput label={CONSTANT.COMFIRM} name={"ip"} />
+        <form
+          onSubmit={form.handleSubmit(handleSubmit)}
+          className="w-full flex flex-col gap-3"
+        >
+          <FormInput
+            label={CONSTANT.IP_ADDRESS}
+            name={"ip"}
+            control={form.control}
+          />
+
+          <FormInput
+            label={CONSTANT.USER}
+            name={"user"}
+            control={form.control}
+          />
+
+          <FormInput
+            label={CONSTANT.LOCATION}
+            name={"location"}
+            control={form.control}
+          />
+
+          <FormInput
+            label={CONSTANT.PANEL_NUMBER}
+            name={"panelNumber"}
+            control={form.control}
+          />
+
+          <FormInputarea
+            label={CONSTANT.REMARK}
+            name="remark"
+            control={form.control}
+          />
+
+          {loading ? (
+            <LoadingButton loading={loading} className="w-full" />
+          ) : (
+            <Button type="submit" className="w-full">
+              {CONSTANT.SUBMIT}
+            </Button>
+          )}
         </form>
       </Form>
     </CustomDialog>

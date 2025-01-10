@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 import {
-  CellContext,
   ColumnDef,
   RowData,
   Table as ShadcnReactTableInstance,
@@ -15,6 +14,7 @@ import {
   FullScrenOptions,
   FullScrenState,
 } from "./feture/fullScreen";
+import { type ShadcnReactTableCustomAction } from "./ShadcnReactCustomActions";
 
 export type { RowData, ColumnDef, ShadcnReactTableInstance };
 
@@ -24,7 +24,7 @@ export type ShadcnReactTableOptions<TData extends RowData> = {
   columns: ColumnDef<TData>[];
   data: TData[];
   enableSelect?: boolean;
-  customActions?: (cell: CellContext<TData, unknown>) => React.ReactNode;
+  customActions?: ShadcnReactTableCustomAction<TData>[];
   toolbar?: (table: ShadcnReactTableInstance<TData>) => React.ReactNode;
   header?: (table: ShadcnReactTableInstance<TData>) => React.ReactNode;
   body?: (table: ShadcnReactTableInstance<TData>) => React.ReactNode;

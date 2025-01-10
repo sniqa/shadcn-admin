@@ -1,7 +1,9 @@
+import { CustomTooltip } from "@/components/custom-tooltip";
 import { RowData, ShadcnReactTableInstance } from "../types";
 
 import { Button } from "@/components/ui/button";
 import { Rows2, Rows3, Rows4 } from "lucide-react";
+import { CONSTANT } from "../lib/constant";
 
 export type ShadcnReactTableDensityProps<TData extends RowData> = {
   table: ShadcnReactTableInstance<TData>;
@@ -14,22 +16,24 @@ const ShadcnReactTableDensity = <TData extends RowData>({
   const { density } = getState();
 
   return (
-    <div>
-      <Button
-        variant={"outline"}
-        size={"icon"}
-        onClick={toggleDensity}
-        className="size-8"
-      >
-        {density === "sm" ? (
-          <Rows4 />
-        ) : density === "md" ? (
-          <Rows3 />
-        ) : (
-          <Rows2 />
-        )}
-      </Button>
-    </div>
+    <CustomTooltip label={CONSTANT.TOGGLE_DENSITY}>
+      <div>
+        <Button
+          variant={"outline"}
+          size={"icon"}
+          onClick={toggleDensity}
+          className="size-8"
+        >
+          {density === "sm" ? (
+            <Rows4 />
+          ) : density === "md" ? (
+            <Rows3 />
+          ) : (
+            <Rows2 />
+          )}
+        </Button>
+      </div>
+    </CustomTooltip>
   );
 };
 
