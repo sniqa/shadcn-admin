@@ -2,11 +2,13 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MainLayout from "./components/main-layout";
 import { lazy, Suspense } from "react";
 import Loading from "./components/loading";
-import Test from "@/pages/Test";
+import Test from "@/Test";
 
-const LoginPage = lazy(() => import("@/pages/Login"));
+const LoginPage = lazy(() => import("@/feature/auth/login"));
 
-const NetworkPage = lazy(() => import("@/pages/network"));
+const NetworkPage = lazy(() => import("@/feature/network/pages"));
+const WorkOrderPage = lazy(() => import("@/feature/work-order/pages"));
+const UserPage = lazy(() => import("@/feature/user/pages"));
 
 const router = createBrowserRouter([
   {
@@ -15,15 +17,19 @@ const router = createBrowserRouter([
     children: [
       { path: "home", element: <></> },
       { path: "network", element: <NetworkPage /> },
+      {
+        path: "order",
+        element: <WorkOrderPage />,
+      },
+      {
+        path: "user",
+        element: <UserPage />,
+      },
     ],
   },
   {
     path: "/login",
     element: <LoginPage />,
-  },
-  {
-    path: "/loading",
-    element: <Loading />,
   },
   {
     path: "/test",

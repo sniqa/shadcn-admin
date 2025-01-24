@@ -13,7 +13,7 @@ const DebouncedInput = forwardRef(
     {
       value: initialValue,
       onChange,
-      debounce = 500,
+      debounce = 300,
       ...props
     }: DebouncedInputProps,
     ref

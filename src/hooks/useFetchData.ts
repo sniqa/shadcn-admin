@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { socket } from "@/lib/socket";
-import { FaildResult, SuccessResult } from "@/types/result";
-import { ClientToServerEvents } from "@/types/socket";
+import { socket, ClientToServerEvents } from "@/feature/websocket";
+import { FaildResult, SuccessResult } from "@/types";
 import { useEffect, useState } from "react";
 
 const eventMap = new Map();
@@ -43,7 +42,9 @@ export const useSocketLoaderData = <TData extends Record<string, any>>(
   };
 };
 
-export const useSocketAction = <TData>(events?: string[]) => {
+type Event = keyof ClientToServerEvents;
+
+export const useSocketAction = <TData>(events?: Event[]) => {
   const [loading, setLoading] = useState(false);
 
   const action = (

@@ -21,3 +21,11 @@ const LoadingButton = ({ loading, children, ...props }: LoadingButtonProps) => {
 };
 
 export default LoadingButton;
+
+//  {loading ? (
+//             <LoadingButton loading={loading} />
+//           ) : (
+//             <Button type="submit" className="w-full">
+//               {CONSTANT.SUBMIT}
+//             </Button>
+//           )}

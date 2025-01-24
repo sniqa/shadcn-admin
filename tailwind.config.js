@@ -12,6 +12,9 @@ export default {
       zIndex: {
         1: "1",
       },
+      width: {
+        timeline: "calc(100% - 6rem)",
+      },
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",

@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { Link, Outlet } from "react-router-dom";
 import Loading from "@/components/loading";
+import CustomAvatar from "@/components/custom-avatar";
 
 const MainLayout = () => {
   return (
@@ -10,9 +11,12 @@ const MainLayout = () => {
         <div className="">Shadcn Admin</div>
 
         <nav className="flex items-center gap-2">
+          <Link to={"/user"}>user</Link>
           <Link to={"/login"}>login</Link>
           <Link to={"/assets"}>assets</Link>
           <Link to={"/network"}>network</Link>
+          <Link to={"/order"}>order</Link>
+          <CustomAvatar />
         </nav>
       </header>
 

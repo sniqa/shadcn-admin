@@ -1,4 +1,4 @@
-import type { SuccessResult, FaildResult } from "@/types/result";
+import type { SuccessResult, FaildResult } from "@/types";
 
 export const successResult = <TData>(data: TData): SuccessResult<TData> => ({
   success: true,

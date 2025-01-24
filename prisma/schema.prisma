@@ -24,7 +24,7 @@ model Network {
   ips      IpAddress[]
   remark   String?     @default("")
   createAt DateTime    @default(now())
-  updateAt DateTime    @default(now())
+  updateAt DateTime    @default(now()) @updatedAt
 }
 
 model IpAddress {
@@ -39,7 +39,7 @@ model IpAddress {
   remark    String?
 
   createAt DateTime @default(now())
-  updateAt DateTime @default(now())
+  updateAt DateTime @default(now()) @updatedAt
 }
 
 model Device {
@@ -51,7 +51,7 @@ model Device {
 
   remark   String?
   createAt DateTime @default(now())
-  updateAt DateTime @default(now())
+  updateAt DateTime @default(now()) @updatedAt
 }
 
 model DeviceModel {
@@ -62,5 +62,95 @@ model DeviceModel {
 
   remark   String?
   createAt DateTime @default(now())
-  updateAt DateTime @default(now())
+  updateAt DateTime @default(now()) @updatedAt
+}
+
+enum Role {
+  PUBLIC
+  USER
+  ADMIN
+}
+
+model Authorization {
+  id       Int      @id @default(autoincrement())
+  Role     Role?
+  //
+  createAt DateTime @default(now())
+  updateAt DateTime @default(now()) @updatedAt
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+model User {
+  id         Int     @id @default(autoincrement())
+  username   String  @unique @default("")
+  password   String  @default("")
+  role       Role?   @default(USER)
+  gender     Gender
+  roleId     Int?
+  avatar     String? @default("")
+  nickname   String? @default("")
+  remark     String? @default("")
+  department String? @default("")
+
+  createAt DateTime @default(now())
+  updateAt DateTime @default(now()) @updatedAt
+
+  workOrderTemplateNode WorkOrderTemplateNode[]
+
+  workOrder WorkOrder[]
+}
+
+enum WorkOrderRole {
+  PROPOSER //发起人
+  COPY //抄送
+  VETTING //审批
+  COMFIRM //确认
+}
+
+model WorkOrderTemplate {
+  id                    Int                     @id @default(autoincrement())
+  title                 String                  @default("")
+  description           String?                 @default("")
+  createAt              DateTime                @default(now())
+  updateAt              DateTime                @default(now()) @updatedAt
+  workOrder             WorkOrder[]
+  WorkOrderTemplateNode WorkOrderTemplateNode[]
+}
+
+model WorkOrderTemplateNode {
+  id                  Int               @id @default(autoincrement())
+  title               String            @default("")
+  description         String?           @default("")
+  users               User[]
+  workOrderRole       WorkOrderRole     @default(PROPOSER)
+  createAt            DateTime          @default(now())
+  updateAt            DateTime          @default(now()) @updatedAt
+  deep                Int               @default(1)
+  workOrderTemplate   WorkOrderTemplate @relation(fields: [workOrderTemplateId], references: [id])
+  workOrderTemplateId Int
+}
+
+enum WorkOrderStatus {
+  CANCEL
+  DONE
+  DENY
+  ALLOW
+}
+
+model WorkOrder {
+  id                  Int               @id @default(autoincrement())
+  author              User              @relation(fields: [authorId], references: [id])
+  authorId            Int
+  workOrderTemplate   WorkOrderTemplate @relation(fields: [workOrderTemplateId], references: [id])
+  workOrderTemplateId Int
+  title               String            @default("")
+  description         String            @default("")
+  status              WorkOrderStatus
+  remark              String?
+  createAt            DateTime          @default(now())
+  updateAt            DateTime          @default(now()) @updatedAt
 }

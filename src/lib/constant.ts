@@ -34,4 +34,13 @@ export const CONSTANT = {
   LOGIN: "登录",
   LOGIN_SUCCESS: "登录成功",
   LOGIN_FAILD: "登录失败",
+  NICKNAME: "昵称",
+  AVATAR: "头像",
+  DEPARTMENT: "部门",
+  CREATE_USER: "创建用户",
+  GENDER: "性别",
+  TITLE: "标题",
+  CREATE_WORKORDER_TEMPLATE: "创建流程模板",
+  CREATE_WORKORDER_TEMPLATE_NODE: "创建流程模板节点",
+  WORKORDER_ROLE: "流程角色",
 };
